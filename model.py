@@ -4,6 +4,8 @@ import os
 import glob 
 import numpy as np
 import re
+import detect
+import urllib
 
 image_shape = 416
 image_path = 'Resources/images/'
@@ -19,14 +21,18 @@ class Model:
   def download_image_ipg(self, urls, file_path):
     for i, url in enumerate(urls):
       full_path = file_path + format(i, '04d') + '.png'
-      r = requests.get(url)
-      with open(full_path, 'wb') as outfile:
-          outfile.write(r.content)
-      img = cv2.imread(full_path)
-      img = cv2.resize(img, (416,416,))
-      cv2.imwrite(full_path, img)
-      img2 = cv2.imread(full_path)
-      # print(img2.shape)
+      # r = requests.get(url)
+      # with open(full_path, 'wb') as outfile:
+      #     outfile.write(r.content)
+      
+      try:
+        urllib.request.urlretrieve(url, full_path)
+      
+        img = cv2.imread(full_path)
+        img = cv2.resize(img, (416,416,))
+        cv2.imwrite(full_path, img)
+      except:
+        pass
 
   def predict(self, URLs):
     try:
@@ -34,7 +40,8 @@ class Model:
     except:
       pass
 
-    os.system('python detect.py --weights runs/train/yolov5s_results4/weights/best.pt --img 416 --conf 0.4 --source {}'.format(image_path))
+    # os.system('python detect.py --weights runs/train/yolov5s_results4/weights/best.pt --img 416 --conf 0.4 --source {}'.format(image_path))
+    detect.run()
 
   def delete_images(self, file_path):
     files = glob.glob(file_path + '*')
