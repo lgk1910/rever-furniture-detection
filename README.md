@@ -17,3 +17,7 @@ Body of the request and response are both in JSON format.
 Example (calling the API with 3 images for prediction):
 
 ![Request](https://2.pik.vn/20210f3cf416-b74d-4a3c-b548-9b539834372c.png)
+
+#### Note:
+If there is some error with SystemExit code of 2, try to uncomment the line 167 in the file *detect.py*, it may fix the problem.
+
