@@ -56,18 +56,19 @@ def post():
         # Predict
         execution_time = time.time()
         trained_model.predict(url_list_filtered)
-        trained_model.transform_vec()
+        # trained_model.transform_vec()
+        obj_list = trained_model.transform_vec()
         Time = time.time() - execution_time
         
-        for file in glob.glob(model.save_dir+'*.txt'):
-            with open(file, 'r') as f:
-                obj_list.append(f.read())
+        # for file in glob.glob(model.save_dir+'*.txt'):
+        #     with open(file, 'r') as f:
+        #         obj_list.append(f.read())
         
         trained_model.delete_images(model.image_path)
         trained_model.delete_images('runs/detect/exp/')
   
         url_detect = list(zip(url_list_filtered,obj_list))
-        return jsonify(num_urls = len(obj_list), value=url_detect, time=Time), 200
+        return jsonify(num_urls = len(obj_list), value=url_detect, time=Time, avg_time=Time/len(obj_list)), 200
     except Error as e:
         print(e)
         return jsonify(label="Error"), 400

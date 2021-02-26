@@ -6,6 +6,7 @@ import numpy as np
 import re
 import detect
 import urllib
+from skimage import io
 
 image_shape = 416
 image_path = 'Resources/images/'
@@ -26,9 +27,11 @@ class Model:
       #     outfile.write(r.content)
       
       try:
-        urllib.request.urlretrieve(url, full_path)
-      
-        img = cv2.imread(full_path)
+        # urllib.request.urlretrieve(url, full_path)
+        # img = cv2.imread(full_path)
+    
+        img = io.imread(url)
+        
         img = cv2.resize(img, (416,416,))
         cv2.imwrite(full_path, img)
       except:
@@ -51,6 +54,7 @@ class Model:
     print('{} files deleted'.format(count))
 
   def transform_vec(self):
+    obj_list = []
     for file in glob.glob(save_dir + "*.txt"):
       # print(file)
       output = np.zeros((1,num_classes))
@@ -64,7 +68,9 @@ class Model:
           # print(int(id))
           output[0][int(id)] = 1
         # print(output[0])
-      with open(file, "w") as f:
-        f.write(str(output[0]))
-        print(file + ' written successfully')
+      obj_list.append(output[0].tolist())
+      # with open(file, "w") as f:
+      #   f.write(str(output[0]))
+      #   print(file + ' written successfully')
+    return obj_list
   
